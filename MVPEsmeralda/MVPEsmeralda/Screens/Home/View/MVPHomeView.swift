@@ -11,11 +11,11 @@ class MVPHomeView: UIView {
     let promotionsCollection: UICollectionView = CustomViews.newCollectionView()
     let ordersCollection: UICollectionView = CustomViews.newCollectionView()
     let favoriteCollection: UICollectionView = CustomViews.newCollectionView()
+    let myscrollview: UIScrollView = CustomViews.newScrollView()
     
     public let promotionsTitle: UILabel = CustomViews.newLabel()
     let ordersTitle: UILabel = CustomViews.newLabel()
     let favoriteTitle: UILabel = CustomViews.newLabel()
-    //let favortieButton = CustomViews.newButton()
     
     // Outros
     
@@ -27,6 +27,23 @@ class MVPHomeView: UIView {
     private let collectionFlow: UICollectionViewFlowLayout = {
         let cvFlow = UICollectionViewFlowLayout()
         cvFlow.scrollDirection = .horizontal
+        cvFlow.itemSize = CGSize(width: 150, height: 150)
+        
+        return cvFlow
+    }()
+    
+    private let collectionFlow2: UICollectionViewFlowLayout = {
+        let cvFlow = UICollectionViewFlowLayout()
+        cvFlow.scrollDirection = .horizontal
+        cvFlow.itemSize = CGSize(width: 150, height: 150)
+        
+        return cvFlow
+    }()
+    
+    private let collectionFlow3: UICollectionViewFlowLayout = {
+        let cvFlow = UICollectionViewFlowLayout()
+        cvFlow.scrollDirection = .horizontal
+        cvFlow.itemSize = CGSize(width: 150, height: 150)
         
         return cvFlow
     }()
@@ -40,7 +57,7 @@ class MVPHomeView: UIView {
         self.backgroundColor = .white
         
         self.setupViews()
-        //self.registerCells()
+        self.registerCell()
         self.setupCollectionFlow()
         self.setupStaticTexts()
     }
@@ -77,13 +94,17 @@ class MVPHomeView: UIView {
     
     /// Registra as células nas collections/table
     private func registerCell() {
-        
+        promotionsCollection.register(MVPHomeCell.self, forCellWithReuseIdentifier: MVPHomeCell.identifier)
+        ordersCollection.register(MVPHomeCell.self, forCellWithReuseIdentifier: MVPHomeCell.identifier)
+        favoriteCollection.register(MVPHomeCell.self, forCellWithReuseIdentifier: MVPHomeCell.identifier)
     }
     
     
     /// Define o layout da collection
     private func setupCollectionFlow() {
-        // self.collection.collectionViewLayout = self.collectionFlow
+        self.promotionsCollection.collectionViewLayout = self.collectionFlow
+        self.ordersCollection.collectionViewLayout = self.collectionFlow2
+        self.favoriteCollection.collectionViewLayout = self.collectionFlow3
     }
     
     
@@ -91,13 +112,14 @@ class MVPHomeView: UIView {
     
     /// Adiciona os elementos (Views) na tela
     private func setupViews() {
-  
-        self.addSubview(promotionsTitle)
-        self.addSubview(promotionsCollection)
-        self.addSubview(ordersTitle)
-        self.addSubview(ordersCollection)
-        self.addSubview(favoriteTitle)
-        self.addSubview(favoriteCollection)
+        
+        self.addSubview(myscrollview)
+        self.myscrollview.addSubview(promotionsTitle)
+        self.myscrollview.addSubview(promotionsCollection)
+        self.myscrollview.addSubview(ordersTitle)
+        self.myscrollview.addSubview(ordersCollection)
+        self.myscrollview.addSubview(favoriteTitle)
+        self.myscrollview.addSubview(favoriteCollection)
     }
     
     
@@ -131,41 +153,47 @@ class MVPHomeView: UIView {
     
     /// Define as constraints que dependem do tamanho da tela
     private func setupDynamicConstraints() {
-        let lateral: CGFloat = self.bounds.width * 0.05
-        let between: CGFloat = 10
+        let lateral: CGFloat = self.bounds.width * 0.02
+        let between: CGFloat = 5
         
         NSLayoutConstraint.deactivate(self.dynamicConstraints)
         
         self.dynamicConstraints = [
-            self.promotionsTitle.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 30),
+            self.myscrollview.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            self.myscrollview.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            self.myscrollview.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            self.myscrollview.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            
+            self.promotionsTitle.topAnchor.constraint(equalTo: myscrollview.topAnchor, constant: 30),
             self.promotionsTitle.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -lateral),
             self.promotionsTitle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: lateral),
-            self.promotionsTitle.heightAnchor.constraint(equalToConstant: 60),
+            self.promotionsTitle.heightAnchor.constraint(equalToConstant: 50),
             
             self.promotionsCollection.topAnchor.constraint(equalTo: promotionsTitle.bottomAnchor, constant: between),
             self.promotionsCollection.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             self.promotionsCollection.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: lateral),
             self.promotionsCollection.heightAnchor.constraint(equalToConstant: 200),
             
-            self.favoriteTitle.topAnchor.constraint(equalTo: promotionsCollection.bottomAnchor, constant: 20),
+            self.favoriteTitle.topAnchor.constraint(equalTo: promotionsCollection.bottomAnchor, constant: 15),
             self.favoriteTitle.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -lateral),
             self.favoriteTitle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: lateral),
-            self.favoriteTitle.heightAnchor.constraint(equalToConstant: 60),
+            self.favoriteTitle.heightAnchor.constraint(equalToConstant: 50),
             
             self.favoriteCollection.topAnchor.constraint(equalTo: favoriteTitle.bottomAnchor, constant: between),
             self.favoriteCollection.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             self.favoriteCollection.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: lateral),
             self.favoriteCollection.heightAnchor.constraint(equalToConstant: 200),
             
-            self.ordersTitle.topAnchor.constraint(equalTo: favoriteCollection.bottomAnchor, constant: 20),
+            self.ordersTitle.topAnchor.constraint(equalTo: favoriteCollection.bottomAnchor, constant: 15),
             self.ordersTitle.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -lateral),
             self.ordersTitle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: lateral),
-            self.ordersTitle.heightAnchor.constraint(equalToConstant: 60),
+            self.ordersTitle.heightAnchor.constraint(equalToConstant: 50),
             
             self.ordersCollection.topAnchor.constraint(equalTo: ordersTitle.bottomAnchor, constant: between),
             self.ordersCollection.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             self.ordersCollection.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: lateral),
             self.ordersCollection.heightAnchor.constraint(equalToConstant: 200),
+            self.ordersCollection.bottomAnchor.constraint(equalTo: myscrollview.bottomAnchor, constant: -30)
         ]
         
         NSLayoutConstraint.activate(self.dynamicConstraints)

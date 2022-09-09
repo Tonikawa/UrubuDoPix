@@ -5,7 +5,9 @@ import UIKit
 
 
 /// Controller responsável POR
-class MVPHomeViewController: UIViewController {
+class MVPHomeViewController: UIViewController, ViewControllerProtocol {
+    
+    
     
     /* MARK: - Atributos */
     /*
@@ -21,7 +23,8 @@ class MVPHomeViewController: UIViewController {
     
     
     /* Delegate & Data Sources */
-
+    let collectionDelegate = MVPHomeDelegate()
+    let collectionDataSource = MVPHomeDataSource()
 
         
     /* MARK: - Ciclo de Vida */
@@ -39,14 +42,29 @@ class MVPHomeViewController: UIViewController {
         self.setupButtonsAction()
     }
     
-
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.collectionDelegate.delegateViewController = self
+        self.collectionDataSource.delegateViewController = self
+        
+        self.myView.promotionsCollection.dataSource = collectionDataSource
+        self.myView.promotionsCollection.delegate = collectionDelegate
+        
+        self.myView.ordersCollection.dataSource = collectionDataSource
+        self.myView.ordersCollection.delegate = collectionDelegate
+        
+        self.myView.favoriteCollection.dataSource = collectionDataSource
+        self.myView.favoriteCollection.delegate = collectionDelegate
+    }
 
     /* MARK: - Protocolo */
-    /*
-        Implementação das funções do protocolo que a controller está herdando.
-
-        AVISO: Apague esse campo de comentário.
-    */
+    
+     func getData() -> Int {
+         return 5
+     }
+     
+    
     
     
 
